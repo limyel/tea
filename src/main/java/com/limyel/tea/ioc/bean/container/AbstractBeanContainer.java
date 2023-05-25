@@ -14,7 +14,7 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
- * 生成 BeanDefine，初始化 PropertyResolversra
+ * 负责生成 BeanDefine，初始化 PropertyResolversra
  */
 public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry implements BeanContainer {
 

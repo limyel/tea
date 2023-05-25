@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Executable;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 负责创建各种 early bean
+ */
 public abstract class CreatableBeanContainer extends AbstractBeanContainer {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

@@ -2,6 +2,9 @@ package com.limyel.tea.ioc.bean.container;
 
 import java.util.List;
 
+/**
+ * Bean 容器的接口
+ */
 public interface BeanContainer {
 
     boolean containsBean(String name);

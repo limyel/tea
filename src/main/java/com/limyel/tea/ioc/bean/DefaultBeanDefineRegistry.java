@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * BeanDefine 仓库，负责查找、注册 BeanDefine
+ */
 public class DefaultBeanDefineRegistry implements BeanDefineRegistry {
 
     private Logger logger = LoggerFactory.getLogger(getClass());

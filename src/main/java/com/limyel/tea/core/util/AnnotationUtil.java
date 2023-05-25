@@ -2,14 +2,15 @@ package com.limyel.tea.core.util;
 
 import com.limyel.tea.core.exception.TeaException;
 import com.limyel.tea.ioc.annotation.Config;
-import com.limyel.tea.ioc.annotation.Order;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 注解工具类
+ */
 public class AnnotationUtil {
 
     public static List<Method> findMethods(Class<?> type, Class<? extends Annotation> annoClass) {

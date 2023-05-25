@@ -9,6 +9,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Object 工具类
+ */
 public class ObjectUtil {
 
     private static Logger logger = LoggerFactory.getLogger(ObjectUtil.class);

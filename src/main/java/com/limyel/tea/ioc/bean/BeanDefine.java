@@ -13,6 +13,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.List;
 
+/**
+ * Bean 定义，并存储 Bean 实例
+ */
 public class BeanDefine implements Comparable<BeanDefine> {
 
     // 名称

@@ -4,6 +4,9 @@ import com.limyel.tea.core.exception.TeaException;
 
 import java.lang.reflect.Constructor;
 
+/**
+ * Class 工具类
+ */
 public class ClassUtil {
 
     public static Constructor<?> getSuitableConstructor(Class<?> type) {

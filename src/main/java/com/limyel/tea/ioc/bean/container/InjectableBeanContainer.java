@@ -8,6 +8,9 @@ import com.limyel.tea.ioc.exception.BeanContainerException;
 
 import java.lang.reflect.*;
 
+/**
+ * 负责处理依赖注入
+ */
 public abstract class InjectableBeanContainer extends CreatableBeanContainer {
 
     public InjectableBeanContainer(Class<?> configType) {

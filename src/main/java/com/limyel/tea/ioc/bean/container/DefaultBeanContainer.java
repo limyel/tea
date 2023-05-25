@@ -1,15 +1,16 @@
 package com.limyel.tea.ioc.bean.container;
 
-import com.limyel.tea.core.io.PropertyResolver;
 import com.limyel.tea.core.util.ObjectUtil;
 import com.limyel.tea.ioc.bean.BeanDefine;
 import com.limyel.tea.ioc.exception.BeanDefineException;
 import com.limyel.tea.ioc.util.BeanContainerUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
+/**
+ * BeanContainer 的默认实现，负责初始化 Bean，实现 BeanContainer 接口
+ */
 public class DefaultBeanContainer extends InjectableBeanContainer {
 
     public DefaultBeanContainer(Class<?> configType) {

@@ -4,6 +4,9 @@ import com.limyel.tea.ioc.bean.container.BeanContainer;
 
 import java.util.Objects;
 
+/**
+ * BeanContainer 工具类
+ */
 public class BeanContainerUtil {
 
     private static BeanContainer beanContainer = null;
