@@ -6,6 +6,7 @@
 
     <groupId>com.limyel</groupId>
     <artifactId>tea</artifactId>
+    <name>tea</name>
     <version>0.1.0</version>
 
     <!--  项目描述  -->
