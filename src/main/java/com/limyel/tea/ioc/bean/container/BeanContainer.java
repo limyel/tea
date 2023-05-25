@@ -1,5 +1,7 @@
 package com.limyel.tea.ioc.bean.container;
 
+import java.util.List;
+
 public interface BeanContainer {
 
     boolean containsBean(String name);
@@ -10,7 +12,7 @@ public interface BeanContainer {
 
     <T> T getBean(String name, Class<T> type);
 
-    <T> T getBeans(Class<T> type);
+    <T> List<T> getBeans(Class<T> type);
 
     void close();
 
