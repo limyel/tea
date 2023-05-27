@@ -1,11 +1,13 @@
 package com.limyel.tea.ioc.bean.container;
 
+import com.limyel.tea.ioc.bean.BeanDefineRegistry;
+
 import java.util.List;
 
 /**
  * Bean 容器的接口
  */
-public interface BeanContainer {
+public interface BeanContainer extends BeanDefineRegistry {
 
     boolean containsBean(String name);
 

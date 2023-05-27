@@ -7,6 +7,7 @@ import com.limyel.tea.ioc.annotation.*;
 import com.limyel.tea.ioc.bean.BeanDefine;
 import com.limyel.tea.ioc.bean.DefaultBeanDefineRegistry;
 import com.limyel.tea.ioc.exception.BeanContainerException;
+import com.limyel.tea.ioc.util.BeanContainerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry im
         createBeanDefines(beanClassNames);
 
         propertyResolver = PropertyResolver.of();
+        BeanContainerUtil.setPropertyResolver(propertyResolver);
 
     }
 

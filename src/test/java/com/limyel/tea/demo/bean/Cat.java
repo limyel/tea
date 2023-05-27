@@ -3,6 +3,7 @@ package com.limyel.tea.demo.bean;
 import com.limyel.tea.ioc.annotation.Component;
 import com.limyel.tea.ioc.annotation.Value;
 
+@Component
 public class Cat {
 
     private String name;
