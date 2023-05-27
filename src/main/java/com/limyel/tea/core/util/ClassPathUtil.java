@@ -51,10 +51,10 @@ public class ClassPathUtil {
             return TMP_PUBLIC_DIR;
         } else {
             basePath = basePath.substring(0, basePath.indexOf("target")) + "target/classes/public";
-//            File file = new File(basePath);
-//            if (!file.exists()) {
-//                file.mkdirs();
-//            }
+            File file = new File(basePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
             return basePath;
         }
     }
