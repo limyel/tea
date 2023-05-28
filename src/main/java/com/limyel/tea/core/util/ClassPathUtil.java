@@ -48,15 +48,15 @@ public class ClassPathUtil {
     public static String getPublicPath(Class<?> clazz) {
         String basePath = clazz.getResource("").getPath();
         if (isJar(clazz)) {
-            return TMP_PUBLIC_DIR;
+            basePath = TMP_PUBLIC_DIR;
         } else {
             basePath = basePath.substring(0, basePath.indexOf("target")) + "target/classes/public";
-            File file = new File(basePath);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            return basePath;
         }
+        File file = new File(basePath);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return basePath;
     }
 
     public static boolean isJar(Class<?> clazz) {
