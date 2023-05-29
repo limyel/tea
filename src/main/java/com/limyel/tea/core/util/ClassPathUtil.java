@@ -1,5 +1,6 @@
 package com.limyel.tea.core.util;
 
+import com.limyel.tea.core.exception.TeaException;
 import com.limyel.tea.core.io.InputStreamCallback;
 
 import java.io.File;
@@ -7,13 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 /**
  * 读取类路径的资源
  */
 public class ClassPathUtil {
 
-    private static String TMP_PUBLIC_DIR = "/tmp/tea/public";
+    private static String TMP_STATIC_DIR = "/tmp/tea/static";
 
     public static <T> T readInputStream(String path, InputStreamCallback<T> inputStreamCallback) {
         if (path.startsWith("/")) {
@@ -45,12 +47,12 @@ public class ClassPathUtil {
         return classLoader;
     }
 
-    public static String getPublicPath(Class<?> clazz) {
+    public static String getStaticPath(Class<?> clazz) {
         String basePath = clazz.getResource("").getPath();
         if (isJar(clazz)) {
-            basePath = TMP_PUBLIC_DIR;
+            basePath = TMP_STATIC_DIR;
         } else {
-            basePath = basePath.substring(0, basePath.indexOf("target")) + "target/classes/public";
+            basePath = basePath.substring(0, basePath.indexOf("target")) + "target/classes/static";
         }
         File file = new File(basePath);
         if (!file.exists()) {
@@ -59,9 +61,28 @@ public class ClassPathUtil {
         return basePath;
     }
 
+    public static String getProjectPath(Class<?> clazz) {
+        String basePath = clazz.getResource("").getPath();
+        if (basePath.indexOf("classes") > 0) {
+            return basePath.substring(0, basePath.indexOf("classes") + 7);
+        } else {
+            return basePath.substring(0, basePath.indexOf("!") + 1);
+        }
+    }
+
     public static boolean isJar(Class<?> clazz) {
         String path = clazz.getResource("").getPath();
         return !path.contains("classes");
+    }
+
+    public static File createTmpDir(String name) {
+        try {
+            File tmpDir = Files.createTempDirectory(name).toFile();
+            tmpDir.deleteOnExit();
+            return tmpDir;
+        } catch (IOException e) {
+            throw new TeaException(e);
+        }
     }
 
 }

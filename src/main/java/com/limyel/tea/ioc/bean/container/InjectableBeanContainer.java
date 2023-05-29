@@ -19,11 +19,11 @@ public abstract class InjectableBeanContainer extends CreatableBeanContainer {
         beans.values().forEach(this::injectBean);
     }
 
-    protected void injectBean(BeanDefine beanDefine) {
+    private void injectBean(BeanDefine beanDefine) {
         injectProperties(beanDefine, beanDefine.getType(), beanDefine.getInstance());
     }
 
-    protected void injectProperties(BeanDefine beanDefine, Class<?> type, Object instance) {
+    private void injectProperties(BeanDefine beanDefine, Class<?> type, Object instance) {
         for (var field : type.getDeclaredFields()) {
             doInjectProperties(beanDefine, instance, field);
         }

@@ -13,12 +13,26 @@ import java.util.List;
  */
 public class DefaultBeanContainer extends InjectableBeanContainer {
 
-    public DefaultBeanContainer(Class<?> configType) {
-        super(configType);
+    private static volatile DefaultBeanContainer INSTANCE;
+
+    private DefaultBeanContainer(Class<?> configClass) {
+        super(configClass);
         BeanContainerUtil.setBeanContainer(this);
 
         beans.values().forEach(this::initBean);
     }
+
+    public static DefaultBeanContainer createInstance(Class<?> configClass) {
+        if (INSTANCE == null) {
+            synchronized (DefaultBeanContainer.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new DefaultBeanContainer(configClass);
+                }
+            }
+        }
+        return INSTANCE;
+    }
+
 
     private void initBean(BeanDefine beanDefine) {
         if (beanDefine.getInitMethodName() != null) {

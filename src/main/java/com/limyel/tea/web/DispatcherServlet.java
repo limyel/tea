@@ -41,9 +41,9 @@ public class DispatcherServlet extends HttpServlet {
     List<Dispatcher> getDispatchers = new ArrayList<>();
     List<Dispatcher> postDispatchers = new ArrayList<>();
 
-    public DispatcherServlet(BeanContainer beanContainer) {
-        this.beanContainer = beanContainer;
-        this.propertyResolver = BeanContainerUtil.getPropertyResolver();
+    public DispatcherServlet() {
+        this.beanContainer = BeanContainerUtil.getRequiredBeanContainer();
+        this.propertyResolver = BeanContainerUtil.getRequiredPropertyResolver();
         this.viewResolver = beanContainer.getBean(ViewResolver.class);
         this.resourcePath = propertyResolver.getProperty("${tea.web.static-path:/static/}");
         this.faviconPath = propertyResolver.getProperty("${tea.web.favicon-path:/favicon.ico}}");
@@ -81,7 +81,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String url = req.getRequestURI();
-        if (url.equals(this.faviconPath) || url.equals(this.resourcePath)) {
+        if (url.equals(this.faviconPath) || url.startsWith(this.resourcePath)) {
             doResource(url, req, resp);
         } else {
             doService(req, resp, this.getDispatchers);
@@ -169,6 +169,7 @@ public class DispatcherServlet extends HttpServlet {
 
     private void doResource(String url, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletContext ctx = req.getServletContext();
+        url = url.replace("/static", "");
         try (InputStream is = ctx.getResourceAsStream(url)) {
             if (is == null) {
                 resp.sendError(404, "Not Found");
@@ -181,6 +182,9 @@ public class DispatcherServlet extends HttpServlet {
                 String mime = ctx.getMimeType(file);
                 if (mime == null) {
                     mime = "application/octet-stream";
+                }
+                if (mime.startsWith("text")) {
+                    mime += "; charset=utf-8";
                 }
                 resp.setContentType(mime);
                 ServletOutputStream os = resp.getOutputStream();

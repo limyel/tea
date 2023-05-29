@@ -1,6 +1,7 @@
 package com.limyel.tea.core.io;
 
 import com.limyel.tea.core.util.ClassPathUtil;
+import com.limyel.tea.ioc.util.BeanContainerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +14,8 @@ import java.util.function.Function;
  */
 public class PropertyResolver {
 
+    private static volatile PropertyResolver INSTANCE;
+
     private static Logger logger = LoggerFactory.getLogger(PropertyResolver.class);
 
     public static String CONFIG_PATH = "/tea.properties";
@@ -20,7 +23,14 @@ public class PropertyResolver {
     private Map<String, String> properties = new HashMap<>();
     private Map<Class<?>, Function<String, Object>> converters = new HashMap<>();
 
-    public PropertyResolver(Properties props) {
+    private PropertyResolver() {
+        Properties props = new Properties();
+        ClassPathUtil.readInputStream(CONFIG_PATH, is -> {
+            logger.info("load properties: {}", CONFIG_PATH);
+            props.load(is);
+            return true;
+        });
+
         // 系统参数
         properties.putAll(System.getenv());
         Set<String> names = props.stringPropertyNames();
@@ -50,6 +60,19 @@ public class PropertyResolver {
         converters.put(ZonedDateTime.class, ZonedDateTime::parse);
         converters.put(Duration.class, Duration::parse);
         converters.put(ZoneId.class, ZoneId::of);
+
+        BeanContainerUtil.setPropertyResolver(this);
+    }
+
+    public static PropertyResolver getInstance() {
+        if (INSTANCE == null) {
+            synchronized (PropertyResolver.class) {
+                if (INSTANCE == null) {
+                    INSTANCE = new PropertyResolver();
+                }
+            }
+        }
+        return INSTANCE;
     }
 
     public boolean containsProperty(String key) {
@@ -141,17 +164,6 @@ public class PropertyResolver {
         }
         return key;
     }
-
-    public static PropertyResolver of() {
-        Properties props = new Properties();
-        ClassPathUtil.readInputStream(CONFIG_PATH, is -> {
-            logger.info("load properties: {}", CONFIG_PATH);
-            props.load(is);
-            return true;
-        });
-        return new PropertyResolver(props);
-    }
-
 }
 
 record PropertyExpr(String key, String defaultValue) {

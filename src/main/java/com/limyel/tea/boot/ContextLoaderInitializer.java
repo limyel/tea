@@ -15,12 +15,10 @@ import java.util.Set;
 
 public class ContextLoaderInitializer implements ServletContainerInitializer {
 
-    private Class<?> configClass;
     private PropertyResolver propertyResolver;
 
     public ContextLoaderInitializer(Class<?> configClass) {
-        this.configClass = configClass;
-        new DefaultBeanContainer(configClass);
+        DefaultBeanContainer.createInstance(configClass);
     }
 
     @Override
@@ -35,7 +33,7 @@ public class ContextLoaderInitializer implements ServletContainerInitializer {
     }
 
     private void registerDispatcherServlet(ServletContext servletContext) {
-        DispatcherServlet dispatcherServlet = new DispatcherServlet(BeanContainerUtil.getRequiredBeanContainer());
+        DispatcherServlet dispatcherServlet = new DispatcherServlet();
         ServletRegistration.Dynamic servlet = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
         servlet.addMapping("/");
         servlet.setLoadOnStartup(0);

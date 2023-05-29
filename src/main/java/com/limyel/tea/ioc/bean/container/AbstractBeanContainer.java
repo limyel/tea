@@ -7,7 +7,6 @@ import com.limyel.tea.ioc.annotation.*;
 import com.limyel.tea.ioc.bean.BeanDefine;
 import com.limyel.tea.ioc.bean.DefaultBeanDefineRegistry;
 import com.limyel.tea.ioc.exception.BeanContainerException;
-import com.limyel.tea.ioc.util.BeanContainerUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +27,7 @@ public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry im
         final Set<String> beanClassNames = scanForClassNames(configType);
         createBeanDefines(beanClassNames);
 
-        propertyResolver = PropertyResolver.of();
-        BeanContainerUtil.setPropertyResolver(propertyResolver);
-
+        propertyResolver = PropertyResolver.getInstance();
     }
 
     /**
@@ -39,7 +36,7 @@ public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry im
      * @param configType
      * @return
      */
-    protected Set<String> scanForClassNames(Class<?> configType) {
+    private Set<String> scanForClassNames(Class<?> configType) {
         // 获取扫描的包路径，如果没有，则以配置类所在包开始
         ComponentScan componentScan = AnnotationUtil.findAnnotation(configType, ComponentScan.class);
         final String[] scanPackages = (componentScan == null) || (componentScan.value().length == 0) ?
@@ -80,7 +77,7 @@ public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry im
      *
      * @param classNames
      */
-    protected void createBeanDefines(Set<String> classNames) {
+    private void createBeanDefines(Set<String> classNames) {
         for (var className : classNames) {
             Class<?> type = null;
             try {
