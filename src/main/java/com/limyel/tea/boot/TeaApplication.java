@@ -60,7 +60,7 @@ public class TeaApplication {
         tomcat.setBaseDir(baseDir);
         tomcat.setPort(port);
         tomcat.getConnector().setThrowOnFailure(true);
-        Context ctx = tomcat.addWebapp("", ClassPathUtil.getStaticPath(configClass));
+        Context ctx = tomcat.addWebapp("", ClassPathUtil.getProjectPath(configClass));
         if (ClassPathUtil.getProjectPath(configClass).indexOf("!") > 0) {
             String jar = "jar:" + ClassPathUtil.getProjectPath(configClass) + "/";
             URL url = new URL(jar);

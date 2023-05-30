@@ -2,6 +2,8 @@ package com.limyel.tea.core.util;
 
 import com.limyel.tea.core.exception.TeaException;
 import com.limyel.tea.core.io.InputStreamCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -14,6 +16,8 @@ import java.nio.file.Files;
  * 读取类路径的资源
  */
 public class ClassPathUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(ClassPathUtil.class);
 
     private static String TMP_STATIC_DIR = "/tmp/tea/static";
 
@@ -47,8 +51,10 @@ public class ClassPathUtil {
         return classLoader;
     }
 
-    public static String getStaticPath(Class<?> clazz) {
+    public static String getProjectBasePath(Class<?> clazz) {
+        String projectPath = getProjectPath(clazz);
         String basePath = clazz.getResource("").getPath();
+        logger.info(basePath);
         if (isJar(clazz)) {
             basePath = TMP_STATIC_DIR;
         } else {

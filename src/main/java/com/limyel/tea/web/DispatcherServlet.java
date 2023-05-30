@@ -169,7 +169,6 @@ public class DispatcherServlet extends HttpServlet {
 
     private void doResource(String url, HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ServletContext ctx = req.getServletContext();
-        url = url.replace("/static", "");
         try (InputStream is = ctx.getResourceAsStream(url)) {
             if (is == null) {
                 resp.sendError(404, "Not Found");
