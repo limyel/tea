@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import(WebMvcConfig.class)
 @Config
 public @interface TeaApplication {
 

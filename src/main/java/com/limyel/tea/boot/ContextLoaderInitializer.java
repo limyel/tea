@@ -28,7 +28,6 @@ public class ContextLoaderInitializer implements ServletContainerInitializer {
 
     @Override
     public void onStartup(Set<Class<?>> set, ServletContext servletContext) throws ServletException {
-        WebMvcConfig.setServletContext(servletContext);
         DefaultBeanContainer.createInstance(configClass);
 
         String encoding = propertyResolver.getProperty("${tea.web.character-encoding:UTF-8}");
