@@ -1,12 +1,13 @@
 package com.limyel.tea.demo;
 
-import com.limyel.tea.boot.TeaApplication;
+import com.limyel.tea.boot.Tea;
+import com.limyel.tea.boot.annotation.TeaApplication;
 import com.limyel.tea.ioc.annotation.Config;
 
-@Config
+@TeaApplication
 public class Main {
 
     public static void main(String[] args) {
-        TeaApplication.run(Main.class, args);
+        Tea.run(Main.class, args);
     }
 }

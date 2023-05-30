@@ -9,7 +9,6 @@ import org.apache.catalina.LifecycleException;
 import org.apache.catalina.Server;
 import org.apache.catalina.WebResourceRoot;
 import org.apache.catalina.startup.Tomcat;
-import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,13 +20,13 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Set;
 
-public class TeaApplication {
+public class Tea {
 
-    private final Logger logger = LoggerFactory.getLogger(TeaApplication.class);
+    private final Logger logger = LoggerFactory.getLogger(Tea.class);
 
     public static void run(Class<?> configClass, String... args) {
         try {
-            new TeaApplication().start(configClass, args);
+            new Tea().start(configClass, args);
         } catch (Exception e) {
             throw new TeaException(e);
         }
@@ -60,12 +59,13 @@ public class TeaApplication {
         tomcat.setBaseDir(baseDir);
         tomcat.setPort(port);
         tomcat.getConnector().setThrowOnFailure(true);
-        Context ctx = tomcat.addWebapp("", ClassPathUtil.getProjectPath(configClass));
-        if (ClassPathUtil.getProjectPath(configClass).indexOf("!") > 0) {
-            String jar = "jar:" + ClassPathUtil.getProjectPath(configClass) + "/";
+        Context ctx = tomcat.addWebapp("", ClassPathUtil.getStaticPath());
+        logger.info("project path: {}", ClassPathUtil.getProjectPath());
+        if (ClassPathUtil.getProjectPath().indexOf("!") > 0) {
+            String jar = "jar:" + ClassPathUtil.getProjectPath() + "/";
             URL url = new URL(jar);
             ctx.setResources(new StandardRoot(ctx));
-            ctx.getResources().createWebResourceSet(WebResourceRoot.ResourceSetType.RESOURCE_JAR, "/", url, "/static");
+            ctx.getResources().createWebResourceSet(WebResourceRoot.ResourceSetType.RESOURCE_JAR, "/static", url, "/static");
         }
         ctx.addServletContainerInitializer(contextLoaderInitializer, Set.of());
         tomcat.start();

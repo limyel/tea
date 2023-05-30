@@ -3,6 +3,7 @@ package com.limyel.tea.ioc.bean.container;
 import com.limyel.tea.core.io.PropertyResolver;
 import com.limyel.tea.core.io.ResourceResolver;
 import com.limyel.tea.core.util.AnnotationUtil;
+import com.limyel.tea.core.util.ClassPathUtil;
 import com.limyel.tea.ioc.annotation.*;
 import com.limyel.tea.ioc.bean.BeanDefine;
 import com.limyel.tea.ioc.bean.DefaultBeanDefineRegistry;
@@ -57,7 +58,7 @@ public abstract class AbstractBeanContainer extends DefaultBeanDefineRegistry im
             result.addAll(classNameList);
         }
 
-        Import importAnno = configType.getAnnotation(Import.class);
+        Import importAnno = AnnotationUtil.findAnnotation(configType, Import.class);
         if (importAnno != null) {
             for (Class<?> importType : importAnno.value()) {
                 String importTypeName = importType.getName();

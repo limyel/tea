@@ -1,8 +1,8 @@
-package com.limyel.tea.web.annotation;
+package com.limyel.tea.boot.annotation;
 
-import com.limyel.tea.ioc.annotation.Component;
+import com.limyel.tea.ioc.annotation.Config;
+import com.limyel.tea.ioc.annotation.Import;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -10,9 +10,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Documented
-@Component
-public @interface RestController {
+@Import(WebMvcConfig.class)
+@Config
+public @interface TeaApplication {
 
     String value() default "";
 

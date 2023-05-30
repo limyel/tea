@@ -1,7 +1,6 @@
 package com.limyel.tea.web;
 
 import com.limyel.tea.core.util.ObjectUtil;
-import com.limyel.tea.web.annotation.ResponseBody;
 import com.limyel.tea.web.exception.WebException;
 import com.limyel.tea.web.util.JsonUtil;
 import com.limyel.tea.web.util.PathUtil;
@@ -26,8 +25,6 @@ public class Dispatcher {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public static final Result NOT_PROCESSED = new Result(false, null);
-    private boolean rest;
-    private boolean responseBody;
     private boolean returnVoid;
     private Pattern urlPattern;
     private Object controller;
@@ -35,8 +32,6 @@ public class Dispatcher {
     private Param[] methodParameters;
 
     public Dispatcher(String httpMethod, boolean rest, Object controller, Method method, String urlPattern) {
-        this.rest = rest;
-        this.responseBody = method.getAnnotation(ResponseBody.class) != null;
         this.returnVoid = method.getReturnType() == void.class;
         this.urlPattern = PathUtil.compile(urlPattern);
         this.controller = controller;
@@ -122,22 +117,6 @@ public class Dispatcher {
             return defaultValue;
         }
         return s;
-    }
-
-    public boolean isRest() {
-        return rest;
-    }
-
-    public void setRest(boolean rest) {
-        this.rest = rest;
-    }
-
-    public boolean isResponseBody() {
-        return responseBody;
-    }
-
-    public void setResponseBody(boolean responseBody) {
-        this.responseBody = responseBody;
     }
 
     public boolean isReturnVoid() {

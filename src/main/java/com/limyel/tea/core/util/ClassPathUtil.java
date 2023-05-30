@@ -20,6 +20,7 @@ public class ClassPathUtil {
     private static Logger logger = LoggerFactory.getLogger(ClassPathUtil.class);
 
     private static String TMP_STATIC_DIR = "/tmp/tea/static";
+    private static String PROJECT_PATH;
 
     public static <T> T readInputStream(String path, InputStreamCallback<T> inputStreamCallback) {
         if (path.startsWith("/")) {
@@ -51,29 +52,33 @@ public class ClassPathUtil {
         return classLoader;
     }
 
-    public static String getProjectBasePath(Class<?> clazz) {
-        String projectPath = getProjectPath(clazz);
-        String basePath = clazz.getResource("").getPath();
-        logger.info(basePath);
-        if (isJar(clazz)) {
-            basePath = TMP_STATIC_DIR;
+    public static void setProjectPath(Class<?> configClass) {
+        String path = configClass.getResource("").getPath();
+        logger.info(path);
+        if (path.indexOf("classes") > 0) {
+            PROJECT_PATH = path.substring(0, path.indexOf("classes") + 7);
         } else {
-            basePath = basePath.substring(0, basePath.indexOf("target")) + "target/classes/static";
+            PROJECT_PATH = path.substring(0, path.indexOf("!") + 1);
         }
-        File file = new File(basePath);
+        logger.info(PROJECT_PATH);
+    }
+
+    public static String getProjectPath() {
+        return PROJECT_PATH;
+    }
+
+    public static String getStaticPath() {
+        String path;
+        if (PROJECT_PATH.contains("!")) {
+            path = TMP_STATIC_DIR;
+        } else {
+            path = PROJECT_PATH;
+        }
+        File file = new File(path);
         if (!file.exists()) {
             file.mkdirs();
         }
-        return basePath;
-    }
-
-    public static String getProjectPath(Class<?> clazz) {
-        String basePath = clazz.getResource("").getPath();
-        if (basePath.indexOf("classes") > 0) {
-            return basePath.substring(0, basePath.indexOf("classes") + 7);
-        } else {
-            return basePath.substring(0, basePath.indexOf("!") + 1);
-        }
+        return path;
     }
 
     public static boolean isJar(Class<?> clazz) {

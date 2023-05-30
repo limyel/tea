@@ -6,7 +6,6 @@ import com.limyel.tea.ioc.util.BeanContainerUtil;
 import com.limyel.tea.web.annotation.Controller;
 import com.limyel.tea.web.annotation.GET;
 import com.limyel.tea.web.annotation.POST;
-import com.limyel.tea.web.annotation.RestController;
 import com.limyel.tea.web.exception.WebException;
 import com.limyel.tea.web.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
@@ -33,7 +32,6 @@ public class DispatcherServlet extends HttpServlet {
 
     private BeanContainer beanContainer;
     private PropertyResolver propertyResolver;
-    private ViewResolver viewResolver;
 
     private String resourcePath;
     private String faviconPath;
@@ -44,7 +42,6 @@ public class DispatcherServlet extends HttpServlet {
     public DispatcherServlet() {
         this.beanContainer = BeanContainerUtil.getRequiredBeanContainer();
         this.propertyResolver = BeanContainerUtil.getRequiredPropertyResolver();
-        this.viewResolver = beanContainer.getBean(ViewResolver.class);
         this.resourcePath = propertyResolver.getProperty("${tea.web.static-path:/static/}");
         this.faviconPath = propertyResolver.getProperty("${tea.web.favicon-path:/favicon.ico}}");
         if (!this.resourcePath.endsWith("/")) {
@@ -60,15 +57,8 @@ public class DispatcherServlet extends HttpServlet {
             Class<?> type = beanDef.getType();
             Object instance = beanDef.getRequiredInstance();
             Controller controller = type.getAnnotation(Controller.class);
-            RestController restController = type.getAnnotation(RestController.class);
-            if (controller != null && restController != null) {
-                throw new WebException("found @Controller and @RestController on class: " + type.getName());
-            }
             if (controller != null) {
                 addController(false, beanDef.getName(), instance);
-            }
-            if (restController != null) {
-                addController(true, beanDef.getName(), instance);
             }
         }
     }
@@ -107,58 +97,22 @@ public class DispatcherServlet extends HttpServlet {
             Result result = dispatcher.process(url, req, resp);
             if (result.processed()) {
                 Object r = result.returnObject();
-                if (dispatcher.isRest()) {
-                    // 响应是否已提交
-                    if (!resp.isCommitted()) {
-                        resp.setContentType("application/json");
-                    }
-                    if (dispatcher.isResponseBody()) {
-                        if (r instanceof String s) {
-                            PrintWriter pw = resp.getWriter();
-                            pw.write(s);
-                            pw.flush();
-                        } else if (r instanceof byte[] data) {
-                            ServletOutputStream os = resp.getOutputStream();
-                            os.write(data);
-                            os.flush();
-                        } else {
-                            throw new WebException("unable to process REST result when handle url: " + url);
-                        }
-                    } else if (!dispatcher.isReturnVoid()) {
+                // 响应是否已提交
+                if (!resp.isCommitted()) {
+                    resp.setContentType("application/json");
+                }
+                if (!dispatcher.isReturnVoid()) {
+                    if (r instanceof String s) {
+                        PrintWriter pw = resp.getWriter();
+                        pw.write(s);
+                        pw.flush();
+                    } else if (r instanceof byte[] data) {
+                        ServletOutputStream os = resp.getOutputStream();
+                        os.write(data);
+                        os.flush();
+                    } else {
                         PrintWriter pw = resp.getWriter();
                         JsonUtil.writeJson(pw, r);
-                    }
-                } else {
-                    if (!resp.isCommitted()) {
-                        resp.setContentType("text/html");
-                    }
-                    if (r instanceof String s) {
-                        if (dispatcher.isResponseBody()) {
-                            PrintWriter pw = resp.getWriter();
-                            pw.write(s);
-                            pw.flush();
-                        } else if (s.startsWith("redirect:")) {
-                            resp.sendRedirect(s.substring(9));
-                        } else {
-                            throw new WebException("unable to process String result when handle url: " + url);
-                        }
-                    } else if (r instanceof byte[] data) {
-                        if (dispatcher.isResponseBody()) {
-                            ServletOutputStream os = resp.getOutputStream();
-                            os.write(data);
-                            os.flush();
-                        } else {
-                            throw new WebException("unable to process byte[] result when handle url: " + url);
-                        }
-                    } else if (r instanceof ModelAndView mv) {
-                        String view = mv.getView();
-                        if (view.startsWith("redirect:")) {
-                            resp.sendRedirect(view.substring(9));
-                        } else {
-                            this.viewResolver.render(view, mv.getModel(), req, resp);
-                        }
-                    } else if (!dispatcher.isReturnVoid() && r != null) {
-                        throw new ServletException("unable to process " + r.getClass().getName() + " result when handle url: " + url);
                     }
                 }
                 return;
