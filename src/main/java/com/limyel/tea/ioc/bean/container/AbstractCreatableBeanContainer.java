@@ -54,7 +54,7 @@ public abstract class CreatableBeanContainer extends AbstractBeanContainer {
         });
     }
 
-    private Object createEarlyBean(BeanDefine beanDefine) {
+    public Object createEarlyBean(BeanDefine beanDefine) {
         logger.atDebug().log("create early bean: {}", beanDefine.getName());
 
         //在创建早期 Bean 时，一个 Bean 只会被创建一次，如果超过一次则发生循环依赖
