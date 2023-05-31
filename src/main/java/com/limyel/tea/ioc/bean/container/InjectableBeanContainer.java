@@ -11,7 +11,7 @@ import java.lang.reflect.*;
 /**
  * 负责处理依赖注入
  */
-public abstract class InjectableBeanContainer extends CreatableBeanContainer {
+public abstract class InjectableBeanContainer extends AbstractCreatableBeanContainer {
 
     public InjectableBeanContainer(Class<?> configType) {
         super(configType);

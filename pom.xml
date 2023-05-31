@@ -56,7 +56,7 @@
         <logback.version>1.4.6</logback.version>
         <tomcat.version>10.1.5</tomcat.version>
         <jackson.version>2.15.0</jackson.version>
-        <freemarker.version>2.3.32</freemarker.version>
+        <byte-buddy.version>1.14.4</byte-buddy.version>
     </properties>
 
     <dependencies>
@@ -102,9 +102,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <version>${freemarker.version}</version>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+            <version>${byte-buddy.version}</version>
         </dependency>
 
     </dependencies>

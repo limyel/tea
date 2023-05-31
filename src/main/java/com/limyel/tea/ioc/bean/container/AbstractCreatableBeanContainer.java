@@ -19,14 +19,14 @@ import java.util.List;
 /**
  * 负责创建各种 early bean
  */
-public abstract class CreatableBeanContainer extends AbstractBeanContainer {
+public abstract class AbstractCreatableBeanContainer extends AbstractBeanContainer implements CreatableBeanContainer {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     protected List<String> creatingBeanNames;
     protected List<BeanPostProcessor> beanPostProcessors;
 
-    public CreatableBeanContainer(Class<?> configType) {
+    public AbstractCreatableBeanContainer(Class<?> configType) {
         super(configType);
         creatingBeanNames = new ArrayList<>();
         beanPostProcessors = new ArrayList<>();
@@ -44,7 +44,8 @@ public abstract class CreatableBeanContainer extends AbstractBeanContainer {
         createNormalBeans();
     }
 
-    private void createNormalBeans() {
+    @Override
+    public void createNormalBeans() {
         List<BeanDefine> beanDefines = beans.values().stream()
                 .filter(beanDefine -> beanDefine.getInstance() == null).sorted().toList();
         beanDefines.forEach(beanDefine -> {
@@ -54,6 +55,7 @@ public abstract class CreatableBeanContainer extends AbstractBeanContainer {
         });
     }
 
+    @Override
     public Object createEarlyBean(BeanDefine beanDefine) {
         logger.atDebug().log("create early bean: {}", beanDefine.getName());
 
