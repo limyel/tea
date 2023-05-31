@@ -17,4 +17,6 @@ public @interface Controller {
 
     String value() default "";
 
+    String[] path() default {};
+
 }
