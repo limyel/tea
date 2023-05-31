@@ -52,7 +52,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         logger.info("init {}", getClass().getName());
-        // 查找 @Controller 和 @RestController
+        // 查找 @Controller
         for (var beanDef : beanContainer.findBeanDefines(Object.class)) {
             Class<?> type = beanDef.getType();
             Object instance = beanDef.getRequiredInstance();

@@ -22,8 +22,6 @@ import java.util.regex.Pattern;
 
 public class Dispatcher {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     public static final Result NOT_PROCESSED = new Result(false, null);
     private boolean returnVoid;
     private Pattern urlPattern;

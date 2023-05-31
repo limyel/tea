@@ -15,7 +15,7 @@ import java.lang.reflect.Parameter;
 
 public class Param {
 
-    public static enum ParamType {
+    public enum ParamType {
         PATH_VARIABLE,
         REQUEST_PARAM,
         REQUEST_BODY,

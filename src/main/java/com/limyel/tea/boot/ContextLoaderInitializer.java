@@ -23,13 +23,12 @@ public class ContextLoaderInitializer implements ServletContainerInitializer {
     public ContextLoaderInitializer(Class<?> configClass) {
         this.configClass = configClass;
         this.propertyResolver = PropertyResolver.getInstance();
+        DefaultBeanContainer.createInstance(configClass);
         ClassPathUtil.setProjectPath(configClass);
     }
 
     @Override
     public void onStartup(Set<Class<?>> set, ServletContext servletContext) throws ServletException {
-        DefaultBeanContainer.createInstance(configClass);
-
         String encoding = propertyResolver.getProperty("${tea.web.character-encoding:UTF-8}");
         servletContext.setRequestCharacterEncoding(encoding);
         servletContext.setResponseCharacterEncoding(encoding);
