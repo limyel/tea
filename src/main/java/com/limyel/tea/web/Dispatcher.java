@@ -29,7 +29,7 @@ public class Dispatcher {
     private Method handlerMethod;
     private Param[] methodParameters;
 
-    public Dispatcher(String httpMethod, boolean rest, Object controller, Method method, String urlPattern) {
+    public Dispatcher(String httpMethod, Object controller, Method method, String urlPattern) {
         this.returnVoid = method.getReturnType() == void.class;
         this.urlPattern = PathUtil.compile(urlPattern);
         this.controller = controller;

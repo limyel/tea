@@ -3,9 +3,7 @@ package com.limyel.tea.web;
 import com.limyel.tea.core.io.PropertyResolver;
 import com.limyel.tea.ioc.bean.container.BeanContainer;
 import com.limyel.tea.ioc.util.BeanContainerUtil;
-import com.limyel.tea.web.annotation.Controller;
-import com.limyel.tea.web.annotation.GET;
-import com.limyel.tea.web.annotation.POST;
+import com.limyel.tea.web.annotation.*;
 import com.limyel.tea.web.exception.WebException;
 import com.limyel.tea.web.util.JsonUtil;
 import jakarta.servlet.ServletConfig;
@@ -38,6 +36,8 @@ public class DispatcherServlet extends HttpServlet {
 
     List<Dispatcher> getDispatchers = new ArrayList<>();
     List<Dispatcher> postDispatchers = new ArrayList<>();
+    List<Dispatcher> putDispatchers = new ArrayList<>();
+    List<Dispatcher> deleteDispatchers = new ArrayList<>();
 
     public DispatcherServlet() {
         this.beanContainer = BeanContainerUtil.getRequiredBeanContainer();
@@ -58,7 +58,7 @@ public class DispatcherServlet extends HttpServlet {
             Object instance = beanDef.getRequiredInstance();
             Controller controller = type.getAnnotation(Controller.class);
             if (controller != null) {
-                addController(false, beanDef.getName(), instance);
+                addController(beanDef.getName(), instance);
             }
         }
     }
@@ -81,6 +81,16 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         doService(req, resp, this.postDispatchers);
+    }
+
+    @Override
+    protected void doPut(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doService(req, resp, this.putDispatchers);
+    }
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doService(req, resp, this.deleteDispatchers);
     }
 
     private void doService(HttpServletRequest req, HttpServletResponse resp, List<Dispatcher> dispatchers) throws ServletException, IOException {
@@ -147,26 +157,36 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
-    private void addController(boolean rest, String name, Object instance) {
-        addMethods(rest, name, instance, instance.getClass());
+    private void addController(String name, Object instance) {
+        addMethods(name, instance, instance.getClass());
     }
 
-    private void addMethods(boolean rest, String name, Object instance, Class<?> type) {
+    private void addMethods(String name, Object instance, Class<?> type) {
         for (var method : type.getDeclaredMethods()) {
             GET get = method.getAnnotation(GET.class);
             if (get != null) {
                 checkMethod(method);
-                this.getDispatchers.add(new Dispatcher("GET", rest, instance, method, get.value()));
+                this.getDispatchers.add(new Dispatcher("GET", instance, method, get.value()));
             }
             POST post = method.getAnnotation(POST.class);
             if (post != null) {
                 checkMethod(method);
-                this.postDispatchers.add(new Dispatcher("POST", rest, instance, method, post.value()));
+                this.postDispatchers.add(new Dispatcher("POST", instance, method, post.value()));
+            }
+            PUT put = method.getAnnotation(PUT.class);
+            if (put != null) {
+                checkMethod(method);
+                this.putDispatchers.add(new Dispatcher("PUT", instance, method, put.value()));
+            }
+            DELETE delete = method.getAnnotation(DELETE.class);
+            if (delete != null) {
+                checkMethod(method);
+                this.deleteDispatchers.add(new Dispatcher("DELETE", instance, method, delete.value()));
             }
         }
         Class<?> superClass = type.getSuperclass();
         if (superClass != null) {
-            addMethods(rest, name, instance, superClass);
+            addMethods(name, instance, superClass);
         }
     }
 
