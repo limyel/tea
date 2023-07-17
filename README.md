@@ -1,7 +1,4 @@
 # tea
+一系列简单的轮子
 
-一个基于 JSON 的 Java Web 框架。
-
-* 提供了一个简单的 IOC 框架
-* 提供了一个简单的 Web 框架
-* 提供了一个简单的 AOP 框架
+## tea-server
