@@ -1,4 +1,16 @@
 # tea
-一系列简单的轮子
+以 web 框架为主的一系列简单轮子。
 
-## tea-server
+## tea-web
+
+## tea-common
+
+## tea-orm
+
+## tea-ioc
+
+## tea-aop
+
+## tea-rpc
+
+## tea-job
